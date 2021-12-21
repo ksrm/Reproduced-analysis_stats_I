@@ -1,0 +1,116 @@
+---
+title: "Reproducible report"
+author: "KSRM"
+date: "12/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ggplot2)
+fresh <- read_excel("All Data for Repository-Final.xlsx")
+
+demographics <- read_excel("All Data for Repository-Final.xlsx")
+
+colnames(demographics) <- c("Experiment","Subject", "Gender","DOB","DOE_1", "DOE_2","Age")
+
+# removed study subjects sliced from data
+unique(demographics$Experiment)
+which(demographics$Experiment == "Also tested but not included in analysis due to low accuracy:", arr.ind=TRUE)
+dim(demographics)
+removed_subjects <- demographics$Subject[84:106]
+demographics <- demographics %>% 
+        slice(-c(82:106))%>%
+        filter(Subject != removed_subjects[1:24])
+
+demographics$Experiment <- gsub(" ", "_", demographics$Experiment)
+
+table(demographics$Experiment,demographics$Gender) # check gender breakdown by experiment
+
+# import experimental data by trial 
+experimental_trial <- read_excel("All Data for Repository-Final.xlsx", 2)
+experimental_trial <- experimental_trial %>% 
+        slice(-c(9479:12242))
+
+
+# rename
+colnames(experimental_trial) <- c("Experiment","Subject","Phase","Block","Trial","Pair_type","Accuracy") 
+experimental_trial$Experiment <- gsub(" ", "_", experimental_trial$Experiment)
+
+Delay_After_Phase_2_subjects <- demographics %>%
+    filter(Experiment == "Delay_After_Phase_2") %>%
+    select(Subject, Gender)
+
+Experiment_1_Delay_After_Phase_2_subjects <- experimental_trial %>%
+    filter(Experiment == "Experiment_1_Delay_After_Phase_2") %>%
+    group_by(Experiment, Block, Pair_type)%>%
+    summarize(Avg = mean(Accuracy))
+
+
+# import experimental data by block
+experimental_block <- read_excel("All Data for Repository-Final.xlsx", 3)
+experimental_block <- experimental_block %>% 
+        slice(-c(2371:3064))
+
+# rename
+colnames(experimental_block) <- c("Experiment","Subject","Phase","Block","Pair_type","Accuracy") 
+experimental_block$Experiment <- gsub(" ", "_", experimental_block$Experiment)
+unique(experimental_block$Experiment)
+```
+
+## Table of means
+
+```{r}
+# verifying Table 1, pg. 15
+(Experiment_1_No_Delay_stats <- experimental_block %>%
+    filter(Experiment == "Experiment_1_No_Delay")%>%
+    group_by(Block, Phase, Pair_type)%>%
+    summarize(Avg = mean(Accuracy)))
+
+knitr::kable(Experiment_1_No_Delay_stats)
+
+(Experiment_1_No_Delay_stats <- experimental_block %>%
+    filter(Experiment == "Experiment_1_No_Delay")%>%
+    group_by(Subject)%>%
+    summarize(Avg = mean(Accuracy)))
+
+####
+(Experiment_1_Delay_stats <- experimental_block %>%
+    filter(Experiment == "Experiment_1_Delay_After_Phase_2") %>%
+    group_by(Block, Phase, Pair_type)%>%
+    summarize(Avg = mean(Accuracy)))
+
+# averaging by pair_type
+(Experiment_1_No_Delay_Summary <- experimental_block %>%
+    filter(Experiment == "Experiment_1_No_Delay")%>%
+    group_by(Pair_type)%>%
+    summarize(Avg = mean(Accuracy), Sd = sd(Accuracy))) #averaging three phases ?
+
+(Experiment_1_Delay_Summary <- experimental_block %>%
+    filter(Experiment == "Experiment_1_Delay_After_Phase_2") %>%
+    group_by(Pair_type)%>%
+    summarize(Avg = mean(Accuracy), Sd = sd(Accuracy)))
+
+(Experiment_2_Delay_Summary <- experimental_block %>%
+    filter(Experiment == "Experiment_2_Delay_After_Phase_1") %>%
+    group_by(Pair_type)%>%
+    summarize(Avg = mean(Accuracy), Sd = sd(Accuracy)))
+
+testing <- rbind (Experiment_1_No_Delay_Summary, Experiment_1_Delay_Summary, Experiment_2_Delay_Summary)
+test_again <- cbind(testing, Experiment = c(1,1, 2, 2, 3, 3))
+
+ggplot(test_again, aes(x = Experiment, y = Avg)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = Avg - Sd,
+                    ymax = Avg + Sd),
+                width = .25) +
+  facet_wrap(~ Pair_type)
+
+```
+
+
+

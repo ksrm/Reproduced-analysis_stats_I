@@ -1,0 +1,47 @@
+\begin{lltable}
+
+\begin{longtable}{llll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:unnamed-chunk-1}}\\
+\toprule
+Block & \multicolumn{1}{c}{Phase} & \multicolumn{1}{c}{Pair\_type} & \multicolumn{1}{c}{Avg}\\
+\midrule
+\endfirsthead
+\caption*{\normalfont{Table \ref{tab:unnamed-chunk-1} continued}}\\
+\toprule
+Block & \multicolumn{1}{c}{Phase} & \multicolumn{1}{c}{Pair\_type} & \multicolumn{1}{c}{Avg}\\
+\midrule
+\endhead
+1.00 & 1.00 & overlapping & 0.60\\
+1.00 & 1.00 & unique & 0.56\\
+1.00 & 2.00 & overlapping & 0.48\\
+1.00 & 2.00 & unique & 0.70\\
+1.00 & 3.00 & overlapping & 0.64\\
+1.00 & 3.00 & unique & 0.88\\
+2.00 & 1.00 & overlapping & 0.91\\
+2.00 & 1.00 & unique & 0.88\\
+2.00 & 2.00 & overlapping & 0.78\\
+2.00 & 2.00 & unique & 0.93\\
+2.00 & 3.00 & overlapping & 0.85\\
+2.00 & 3.00 & unique & 0.93\\
+3.00 & 1.00 & overlapping & 0.91\\
+3.00 & 1.00 & unique & 0.88\\
+3.00 & 2.00 & overlapping & 0.91\\
+3.00 & 2.00 & unique & 0.93\\
+3.00 & 3.00 & overlapping & 0.89\\
+3.00 & 3.00 & unique & 0.96\\
+4.00 & 1.00 & overlapping & 0.92\\
+4.00 & 1.00 & unique & 0.93\\
+4.00 & 2.00 & overlapping & 0.88\\
+4.00 & 2.00 & unique & 0.97\\
+4.00 & 3.00 & overlapping & 0.93\\
+4.00 & 3.00 & unique & 0.92\\
+5.00 & 1.00 & overlapping & 0.93\\
+5.00 & 1.00 & unique & 0.92\\
+5.00 & 2.00 & overlapping & 0.91\\
+5.00 & 2.00 & unique & 0.97\\
+5.00 & 3.00 & overlapping & 0.95\\
+5.00 & 3.00 & unique & 0.94\\
+\bottomrule
+\end{longtable}
+
+\end{lltable}
