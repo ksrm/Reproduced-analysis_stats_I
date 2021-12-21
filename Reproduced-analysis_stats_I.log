@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.10) (preloaded format=pdflatex 2021.11.11)  20 DEC 2021 21:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (MiKTeX 21.10) (preloaded format=pdflatex 2021.11.11)  20 DEC 2021 23:23
 entering extended mode
-**./Semester_project.tex
-(Semester_project.tex
+**./Reproduced-analysis_stats_I.tex
+(Reproduced-analysis_stats_I.tex
 LaTeX2e <2021-06-01> patch level 1
 L3 programming layer <2021-10-18> (C:/Users/12055/Documents/R/MikTeX 2.9\tex/la
 tex/base\article.cls
@@ -400,11 +400,11 @@ l.108 \captionsetup
                    {font=singlespacing,justification=justified} 
 Here is how much of TeX's memory you used:
  11446 strings out of 478907
- 167074 string characters out of 2855154
- 501384 words of memory out of 3000000
+ 167131 string characters out of 2855154
+ 501417 words of memory out of 3000000
  29205 multiletter control sequences out of 15000+600000
  406420 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,0n,80p,523b,270s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 74i,0n,80p,534b,270s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 !  ==> Fatal error occurred, no output PDF file produced!
