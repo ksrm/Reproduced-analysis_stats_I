@@ -1,0 +1,158 @@
+---
+title             : "Replication of Darby and Sloutsky (2015) analysis "
+shorttitle        : "Semester project"
+
+author: 
+  - name          : "Scarlett Reynoso Moreno"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "365 5th Ave, New York, NY 10016"
+    email         : "leavesofnyc@gmail.com"
+
+affiliation:
+  - id            : "1"
+    institution   : "CUNY BA for Unique and Interdisciplinary Studies"
+
+authornote: |
+  Fill
+
+abstract: |
+  
+  
+keywords          : "Retroactive Interference, Memory Consolidation"
+wordcount         : "X"
+
+bibliography      : ["r-references.bib","references.bib"]
+
+floatsintext      : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : yes
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r setup, include = FALSE}
+library("papaja")
+```
+
+```{r analysis-preferences}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+```
+
+## Introduction
+
+Recent research has suggested that children experience catastrophic interference of memory at a much higher rate than adults. This means that when new learning takes place, old learning can fade in children. This effect is rarely seen in adults. Darby and Sloutsky (2015) designed an experiment to test the affect of delays between learning and testing to find out if time assists in preventing retroactive interference.
+
+<!--This is a comment and will not print into document -->
+
+Importing data
+```{r}
+library(dplyr)
+library(readxl)
+library(ggplot2)
+
+# import experimental data by block
+experimental_block <- read_excel("All Data for Repository-Final.xlsx", 3)
+experimental_block <- experimental_block %>% 
+        slice(-c(2371:3064))
+
+# rename
+colnames(experimental_block) <- c("Experiment","Subject","Phase","Block","Pair_type","Accuracy") 
+experimental_block$Experiment <- gsub(" ", "_", experimental_block$Experiment)
+unique(experimental_block$Experiment)
+
+# verifying Table 1, pg. 15
+(Experiment_1_No_Delay_stats <- experimental_block %>%
+    filter(Experiment == "Experiment_1_No_Delay")%>%
+    group_by(Block, Phase, Pair_type)%>%
+    summarize(Avg = mean(Accuracy)))
+
+apa_table(Experiment_1_No_Delay_stats, caption = "Average Accuracy Means")
+
+```
+
+# Methods
+
+## Participants
+
+The participants of experiment 1, no delay condition were forty pre-school aged children ranging in ages between 4.6 and 5.8 with a gender breakdown of 22 girls to 18 boys @ darby2015delays. 
+
+## Material
+
+The experimental questions related to this replication study can be found in @darby2015delays. 
+
+## Procedure
+
+In experiment 1, no delay condition, participants took part in three phases deciding which two commonplace objects were associated with the cartoon character Mickey Mouse or Pooh Bear. The trials that composed the three phases were either associated with an "overlapping" condition or a "unique" condition. If participants were a part of "overlapping" trials, then one of the two commonplace objects associated to a cartoon character in phase 1 would be recombined with a different second object in phase two. Then in phase 3 participants were tested to see if they still remembered the two objects associated to a cartoon character in phase 1. If participants were a part of "unique" trials, then the two objects associated with a cartoon character in phase 1 were not present in phase 2. 
+
+Variables : delay and no delay w/ overlapping and unique levels 
+
+```{r}
+(Experiment_1_No_Delay_overlapping <- experimental_block %>%
+    filter(Pair_type == "overlapping")%>%
+    filter(Experiment == "Experiment_1_No_Delay")%>%
+    group_by(Subject) %>%
+    summarize(AvgAccuracy = mean(Accuracy)))
+
+(Experiment_1_No_Delay_unique <- experimental_block %>%
+    filter(Pair_type == "unique")%>%
+    filter(Experiment == "Experiment_1_No_Delay")%>%
+    group_by(Subject) %>%
+    summarize(AvgAccuracy = mean(Accuracy)))
+
+
+(t_test <- t.test(Experiment_1_No_Delay_overlapping$AvgAccuracy, 
+                  Experiment_1_No_Delay_unique$AvgAccuracy,
+                  paired = TRUE))
+
+```
+
+
+### Power curve - Simulation-based power analysis
+
+```{r}
+# rstats simulation code
+effect_sizes <- seq(0,1.5,.1)
+prop_significant <-c()
+for(i in 1:length(effect_sizes)){
+  sim_ps <- replicate(1000, t.test(replicate(40, rnorm(1, effect_sizes[i], 1)),
+                                   mu = 0)$p.value)
+  
+  prop_significant[i] <- length(sim_ps[sim_ps < .05])/1000
+}
+plot_df <- data.frame(effect_sizes,
+                      prop_significant)
+ggplot(plot_df, aes(x=effect_sizes,y=prop_significant))+
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks=seq(0,1.5,.1))+
+  scale_y_continuous(breaks=seq(0,1,.1)) +
+  ylab("Proportion Significant")
+```
+
+
+### Results
+  No-delay condition, Darby and Sloutsky (2015) found that accuracy significantly decreased in overlapping pairs, t(24) = 6.82. p <.001, Cohen's d = 1.39. In unique pairs there was not significance, p = .46. 
+
+\newpage
+
+# References
+
+```{r create_r-references}
+r_refs(file = "r-references.bib")
+```
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id="refs" custom-style="Bibliography"></div>
+\endgroup
